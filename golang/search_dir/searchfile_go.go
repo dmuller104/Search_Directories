@@ -215,7 +215,7 @@ func search_dir_surface(dir string, pattern string) {
 	search_dir(dir, pattern, 0)
 }
 func search_dir(dir string, pattern string, depth int) {
-	fmt.Println("\nSearch Directory")
+	// fmt.Println("\nSearch Directory")
 	// fmt.Println(dir)
 	files, err := ioutil.ReadDir(dir)
 	var dirs []string
@@ -236,7 +236,7 @@ func search_dir(dir string, pattern string, depth int) {
 		if results != nil {
 			fmt.Printf("%s\n", results.name)
 			for _, line := range results.lines {
-				fmt.Printf("%d %+s\n", line.number, string(line.line))
+				fmt.Printf("    %d %+s\n", line.number, string(line.line))
 			}
 		}
 	}
@@ -262,18 +262,17 @@ func do_search_dirs() {
 	search_dir(dir, "[hH]ello", 1)
 }
 
-func main() {
-	fmt.Println("----Start----")
-	do_search_file()
-	do_search_file_go()
-	do_search_file_go2()
-	do_search_list_of_files()
-	dir_unof := working_with_path("searchable.txt")
-	res, _ := search_file(dir_unof, "[hH]ello")
-	fmt.Printf("%+v\n", res)
-	do_search_dir_f()
-	do_search_dir()
-	do_search_dirs()
-	fmt.Println("----Complete----")
-
-}
+// func main() {
+// 	fmt.Println("----Start----")
+// 	do_search_file()
+// 	do_search_file_go()
+// 	do_search_file_go2()
+// 	do_search_list_of_files()
+// 	dir_unof := working_with_path("searchable.txt")
+// 	res, _ := search_file(dir_unof, "[hH]ello")
+// 	fmt.Printf("%+v\n", res)
+// 	do_search_dir_f()
+// 	do_search_dir()
+// 	do_search_dirs()
+// 	fmt.Println("----Complete----")
+// }
