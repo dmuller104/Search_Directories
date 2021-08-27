@@ -211,8 +211,12 @@ func do_search_dir_f() {
 	search_dir_f(dir)
 }
 
-func search_dir(dir string, pattern string) {
-	fmt.Println("\n----Search files in directory----")
+func search_dir_surface(dir string, pattern string) {
+	search_dir(dir, pattern, 0)
+}
+func search_dir(dir string, pattern string, depth int) {
+	fmt.Println("\nSearch Directory")
+	// fmt.Println(dir)
 	files, err := ioutil.ReadDir(dir)
 	var dirs []string
 	check(err)
@@ -229,7 +233,6 @@ func search_dir(dir string, pattern string) {
 	}
 	for i := 0; i < num_searched; i++ {
 		results := <-pipe
-		fmt.Println("Searched one")
 		if results != nil {
 			fmt.Printf("%s\n", results.name)
 			for _, line := range results.lines {
@@ -237,18 +240,26 @@ func search_dir(dir string, pattern string) {
 			}
 		}
 	}
-	for _, d := range dirs {
-		// search_dir(d,pattern)
-		fmt.Println("Search:", d)
+	if depth > 0 {
+		for _, d := range dirs {
+			search_dir(path.Join(dir, d), pattern, depth-1)
+			// fmt.Println("Search:", d)
+		}
 	}
 
 }
 
 func do_search_dir() {
-	fmt.Println("\nSearch Directory")
+	fmt.Println("\n----Search files in directory----")
 	dir, err := get_dir("..\\search_dir\\testDir")
 	check(err)
-	search_dir(dir, "[hH]ello")
+	search_dir_surface(dir, "[hH]ello")
+}
+func do_search_dirs() {
+	fmt.Println("\n----Search files in directories----")
+	dir, err := get_dir("..\\search_dir\\testDir")
+	check(err)
+	search_dir(dir, "[hH]ello", 1)
 }
 
 func main() {
@@ -262,6 +273,7 @@ func main() {
 	fmt.Printf("%+v\n", res)
 	do_search_dir_f()
 	do_search_dir()
+	do_search_dirs()
 	fmt.Println("----Complete----")
 
 }
