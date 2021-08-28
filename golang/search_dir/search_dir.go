@@ -4,11 +4,15 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 )
 
+// TODO don't search files that aren't text files
+
 func Input_Depth(depth *int, err error, do bool) {
+	// if do is true then get user input
+	// while err or depth < 0 get user input
 	var depth_s string
-	// fmt.Print("Depth: ", *depth)
 	if do {
 		fmt.Print("Depth: ")
 		fmt.Scanln(&depth_s)
@@ -23,6 +27,7 @@ func Input_Depth(depth *int, err error, do bool) {
 }
 
 func main() {
+	start := time.Now()
 	var dir, pattern string
 	var depth int
 	var err error
@@ -51,28 +56,13 @@ func main() {
 	if len(os.Args) > 3 {
 		depth, err = strconv.Atoi(os.Args[3])
 		fmt.Println("Depth:", depth)
-		// fmt.Println("error: ", err)
+		// while error or less than 0 then gets input
 		Input_Depth(&depth, err, false)
-		// for err != nil || depth < 0{
-		// 	fmt.Println("Depth must be an int >= 0")
-		// 	fmt.Print("Depth: ")
-		// 	fmt.Scanln(&depth_s)
-		// 	depth,err = strconv.Atoi(depth_s)
-		// }
 	} else {
 		Input_Depth(&depth, err, true)
-		// fmt.Print("Depth: ")
-		// fmt.Scanln(&depth_s)
-		// depth,err := strconv.Atoi(depth_s)
-		// for err != nil || depth < 0{
-		// 	fmt.Println("Depth must be an int >= 0")
-		// 	fmt.Print("Depth: ")
-		// 	fmt.Scanln(&depth_s)
-		// 	depth,err = strconv.Atoi(depth_s)
-		// }
 	}
-
+	fmt.Println(time.Since(start))
 	fmt.Print("\n\n")
-	search_dir(dir, pattern, depth)
+	search_dir(dir, pattern, depth, true, start)
 	// fmt.Println(dir, pattern, depth)
 }

@@ -104,7 +104,35 @@ type FileResult struct {
 	lines []Line
 }
 
+func check_file_type(name string) int {
+	switch filepath.Ext(name) {
+	case ".txt":
+		return 1
+	case ".csv":
+		return 2
+	case ".cpp":
+		return 3
+	case ".py":
+		return 3
+	case ".go":
+		return 3
+	case ".html":
+		return 3
+	case ".js":
+		return 3
+	case ".clj":
+		return 3
+	default:
+		return -1
+	}
+}
+
 func search_file_go2(name string, pattern string, pipe chan *FileResult) {
+	if check_file_type(name) == -1 {
+		// fmt.Println("-1:", name)
+		pipe <- nil
+		return
+	}
 	var file FileResult
 	file.name = name
 	dat, err := ioutil.ReadFile(file.name)
@@ -211,10 +239,10 @@ func do_search_dir_f() {
 	search_dir_f(dir)
 }
 
-func search_dir_surface(dir string, pattern string) {
-	search_dir(dir, pattern, 0)
+func search_dir_surface_here(dir string, pattern string) {
+	search_dir_here(dir, pattern, 0, true)
 }
-func search_dir(dir string, pattern string, depth int) {
+func search_dir_here(dir string, pattern string, depth int, show bool) {
 	// fmt.Println("\nSearch Directory")
 	// fmt.Println(dir)
 	files, err := ioutil.ReadDir(dir)
@@ -236,13 +264,15 @@ func search_dir(dir string, pattern string, depth int) {
 		if results != nil {
 			fmt.Printf("%s\n", results.name)
 			for _, line := range results.lines {
-				fmt.Printf("    %d %+s\n", line.number, string(line.line))
+				if show {
+					fmt.Printf("    %d %+s\n", line.number, string(line.line))
+				}
 			}
 		}
 	}
 	if depth > 0 {
 		for _, d := range dirs {
-			search_dir(path.Join(dir, d), pattern, depth-1)
+			search_dir_here(path.Join(dir, d), pattern, depth-1, show)
 			// fmt.Println("Search:", d)
 		}
 	}
@@ -253,13 +283,13 @@ func do_search_dir() {
 	fmt.Println("\n----Search files in directory----")
 	dir, err := get_dir("..\\search_dir\\testDir")
 	check(err)
-	search_dir_surface(dir, "[hH]ello")
+	search_dir_surface_here(dir, "[hH]ello")
 }
 func do_search_dirs() {
 	fmt.Println("\n----Search files in directories----")
 	dir, err := get_dir("..\\search_dir\\testDir")
 	check(err)
-	search_dir(dir, "[hH]ello", 1)
+	search_dir_here(dir, "[hH]ello", 1, true)
 }
 
 // func main() {
